@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #1e1e2f;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .calculator {
+      background: #2e2e3e;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+      width: 320px;
+    }
+
+    .display {
+      background: #1b1b2b;
+      color: #fff;
+      font-size: 2rem;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: right;
+      margin-bottom: 15px;
+      overflow-x: auto;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 20px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 10px;
+      background-color: #4a4a60;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #66668a;
+    }
+
+    .operator {
+      background-color: #ff8c42;
+    }
+
+    .operator:hover {
+      background-color: #ffa05e;
+    }
+
+    .function {
+      background-color: #888;
+    }
+
+    .equal {
+      background-color: #4caf50;
+      grid-row: span 2;
+    }
+
+    .zero {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="btn function" data-action="clear">C</button>
+      <button class="btn function" data-action="backspace">←</button>
+      <button class="btn operator" data-value="/">÷</button>
+      <button class="btn operator" data-value="*">×</button>
+      
+      <button class="btn" data-value="7">7</button>
+      <button class="btn" data-value="8">8</button>
+      <button class="btn" data-value="9">9</button>
+      <button class="btn operator" data-value="-">−</button>
+
+      <button class="btn" data-value="4">4</button>
+      <button class="btn" data-value="5">5</button>
+      <button class="btn" data-value="6">6</button>
+      <button class="btn operator" data-value="+">+</button>
+
+      <button class="btn" data-value="1">1</button>
+      <button class="btn" data-value="2">2</button>
+      <button class="btn" data-value="3">3</button>
+      <button class="btn equal" data-action="equal">=</button>
+
+      <button class="btn zero" data-value="0">0</button>
+      <button class="btn" data-value=".">.</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+    let currentInput = '';
+
+    function updateDisplay() {
+      display.textContent = currentInput || '0';
+    }
+
+    function calculate() {
+      try {
+        currentInput = eval(currentInput).toString();
+      } catch {
+        currentInput = 'Error';
+      }
+      updateDisplay();
+    }
+
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const value = btn.dataset.value;
+        const action = btn.dataset.action;
+
+        if (action === 'clear') {
+          currentInput = '';
+        } else if (action === 'backspace') {
+          currentInput = currentInput.slice(0, -1);
+        } else if (action === 'equal') {
+          calculate();
+          return;
+        } else if (value) {
+          currentInput += value;
+        }
+
+        updateDisplay();
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      const key = e.key;
+      if ((/[0-9.+\-*/]/).test(key)) {
+        currentInput += key;
+      } else if (key === 'Enter') {
+        calculate();
+      } else if (key === 'Backspace') {
+        currentInput = currentInput.slice(0, -1);
+      } else if (key === 'Escape') {
+        currentInput = '';
+      }
+      updateDisplay();
+    });
+
+    updateDisplay();
+  </script>
+</body>
+</html>
